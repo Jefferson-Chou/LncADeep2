@@ -81,7 +81,7 @@ config.output_mode = "boolean_cls"
 model = MLP_learner(config)
 
 
-def identify(filename, device = 'cpu', out_dir = './identification/output/results.csv', hmmsearch_thread = 1, feat_out = 0, model_file = './identification/models/model_93_0.1750_0.9440.pt'):
+def identify(filename, device = 'cpu', out_dir = './identification/output/results.csv', hmmsearch_thread = 1, feat_out = 0, model_file = './identification/models/model_29_0.9178.pt'):
     device = torch.device(device)
     # parse input file
     print('reading fasta files...')
