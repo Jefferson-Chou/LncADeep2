@@ -42,17 +42,17 @@ Files mentioned below can be obtained in [Zenodo](https://doi.org/10.5281/zenodo
 tar xvf Rpkg.tar.gz
 cp -r ./Rpkg/* ~/.conda/envs/lncadeep/lib/R/library/
 ```
-* The lncRNA function annotation module calls for the DNA-BERT pre-trained model, which can be obtained in [huggingface](https://huggingface.co/zhihan1996/DNABERT-2-117M). Users can also choose to download the file named  `DNABERT-2-117M.tar.gz` in [Zenodo](https://zenodo.org/records/14882729?preview=1&token=eyJhbGciOiJIUzUxMiJ9.eyJpZCI6ImJjNWM5NDZhLTZjZTYtNGZjZi1hNzBmLWNmNWVlOGQxYzMyYiIsImRhdGEiOnt9LCJyYW5kb20iOiIzYjZkZjk3MzE0OTI2ZmFlYTA5ZmI4MDdhY2JiYTlhYSJ9.oekKwDbkjTxlzI1SRs5g0bPbNRNZiAheGliFvrWuZEV0n6sgX6fhzRhTgebJeGlf8LPl1WUdfRaxKJ_AVnzGtw). After downloaded, please:
+* The lncRNA function annotation module calls for the DNA-BERT pre-trained model, which can be obtained in [huggingface](https://huggingface.co/zhihan1996/DNABERT-2-117M). Users can also choose to download the file named  `DNABERT-2-117M.tar.gz` in [Zenodo](https://doi.org/10.5281/zenodo.17667433). After downloaded, please:
 ```
 cd ~/LncADeep2/annotation/models/
 tar xvf DNABERT-2-117M.tar.gz
 ```
-* The lncRNA identification module calls for Pfam dataset and hmmsearch, which are named `identification_src.tar.gz` in [Zenodo](https://zenodo.org/records/14882729?preview=1&token=eyJhbGciOiJIUzUxMiJ9.eyJpZCI6ImJjNWM5NDZhLTZjZTYtNGZjZi1hNzBmLWNmNWVlOGQxYzMyYiIsImRhdGEiOnt9LCJyYW5kb20iOiIzYjZkZjk3MzE0OTI2ZmFlYTA5ZmI4MDdhY2JiYTlhYSJ9.oekKwDbkjTxlzI1SRs5g0bPbNRNZiAheGliFvrWuZEV0n6sgX6fhzRhTgebJeGlf8LPl1WUdfRaxKJ_AVnzGtw). After downloaded, please:
+* The lncRNA identification module calls for Pfam dataset and hmmsearch, which are named `identification_src.tar.gz` in [Zenodo](https://doi.org/10.5281/zenodo.17667433). After downloaded, please:
 ```
 cd ~/LncADeep2/identification
 tar xvf identification_src.tar.gz
 ```
-* The lncRNA annotation module dependencies `annotation_src.tar.gz` can be downloaded in [Zenodo](https://zenodo.org/records/14882729?preview=1&token=eyJhbGciOiJIUzUxMiJ9.eyJpZCI6ImJjNWM5NDZhLTZjZTYtNGZjZi1hNzBmLWNmNWVlOGQxYzMyYiIsImRhdGEiOnt9LCJyYW5kb20iOiIzYjZkZjk3MzE0OTI2ZmFlYTA5ZmI4MDdhY2JiYTlhYSJ9.oekKwDbkjTxlzI1SRs5g0bPbNRNZiAheGliFvrWuZEV0n6sgX6fhzRhTgebJeGlf8LPl1WUdfRaxKJ_AVnzGtw). After downloaded, please:
+* The lncRNA annotation module dependencies `annotation_src.tar.gz` can be downloaded in [Zenodo](https://doi.org/10.5281/zenodo.17667433). After downloaded, please:
 ```
 cd ~/LncADeep2/annotation
 tar xvf annotation_src.tar.gz
