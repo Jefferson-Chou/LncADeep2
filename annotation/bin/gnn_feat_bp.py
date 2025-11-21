@@ -216,7 +216,6 @@ class Model(torch.nn.Module):
         return x
 
 gnn_mod = Model(hidden_channels=150)
-gnn_mod.load_state_dict(torch.load('./annotation/models/lpi_model_50_0.9342.pt'))
 
 ''' Data preparation for embedding '''
 lnc2uniprot_pos = pd.read_csv('./annotation/src/lnc2uniprot_bp_pos_old.csv')
@@ -247,6 +246,8 @@ with open(f"./annotation/src/train_test_data_fold1.pt", "rb") as f:
 def export_emb_in(ensembl_id, device):
     ncid = ncID_dict[ensembl_id]
     # custom data
+    gnn_mod.load_state_dict(torch.load('./annotation/models/lpi_model_50_0.9342.pt', map_location=device))
+
     gnn_mod.to(device)
     gnn_mod.eval()
     prolist = set(lnc2uniprot_pos_idx['uniprot'])
@@ -266,6 +267,7 @@ def export_emb_in(ensembl_id, device):
 def export_emb_ex(ensembl_id, device, lnc_emb_df):
     ncid = 12650
     # custom data
+    gnn_mod.load_state_dict(torch.load('./annotation/models/lpi_model_50_0.9342.pt', map_location=device))
     gnn_mod.to(device)
     gnn_mod.eval()
     prolist = set(lnc2uniprot_pos_idx['uniprot'])

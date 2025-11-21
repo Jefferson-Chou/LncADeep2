@@ -38,7 +38,7 @@ def predict(pred_file, ensembl_id, dev):
     prolist = [tarName_revdict[i] for i in prolist]
     device = torch.device(dev)
     model = SimpleNN().to(device)
-    model.load_state_dict(torch.load('./annotation/models/finetune_model_90_0.9817.pt'))
+    model.load_state_dict(torch.load('./annotation/models/finetune_model_90_0.9817.pt', map_location=device))
     model.eval()
     inputs = inputs.to(device)
     with torch.no_grad():

@@ -7,11 +7,11 @@ library(parallel)
 library(doParallel)
 library(this.path)
 library(optparse)
-setwd(dirname(this.path()))
+setwd(file.path(dirname(this.path()), '../../'))
 
 option_list <- list(
   make_option(c("-n", "--num_cores"), type = "integer", default = 2, help = "Number of cores to use for makeCluster", metavar = "integer"),
-  make_option(c("-d", "--save_dir"), type = "character", default = "./output", help = "Directory to save the results", metavar = "character")
+  make_option(c("-d", "--save_dir"), type = "character", default = "../output/", help = "Directory to save the results", metavar = "character")
 )
 
 opt_parser <- OptionParser(option_list = option_list)
@@ -20,16 +20,16 @@ opt <- parse_args(opt_parser)
 num_cores <- opt$num_cores
 save_dir <- opt$save_dir
 
-load('../src/gson_GO_all.rData')
+load('./annotation/src/gson_GO_all.rData')
 gsid2gene <- gson_GO_all@gsid2gene
 gene2name <- gson_GO_all@gene2name
 gsid2name <- gson_GO_all@gsid2name
 gsid2ont <- go2ont(gsid2name$gsid)
 
-hsGO_BP_IC <- read.csv('../src/hsGO_BP_IC.csv')
+hsGO_BP_IC <- read.csv('./annotation/src/hsGO_BP_IC.csv')
 rownames(hsGO_BP_IC) <- hsGO_BP_IC$GO
 
-uniprot2symbol_table <- read.csv('../src/uniprot2symbol_all.csv')
+uniprot2symbol_table <- read.csv('./annotation/src/uniprot2symbol_all.csv')
 colnames(uniprot2symbol_table) <- c('uniprot', 'symbol')
 
 #### GO ####
@@ -83,12 +83,13 @@ clusterExport(cl, varlist = c("save_dir"))
 registerDoParallel(cl)
 print('Annotation start...')
 
-pred.files <- dir('../tmp/', pattern = '.csv')
+pred.files <- dir('./annotation/tmp/', pattern = '.csv')
+
 foreach(i=1:length(pred.files), .packages = c("clusterProfiler", "org.Hs.eg.db", "enrichplot", "ggplot2")) %dopar% {
     print(paste0(i,'/',length(pred.files)))
     file <- pred.files[i]
     id <- unlist(strsplit(file, '_'))[1]
-    pred <- read.csv(paste0('../tmp/', file))
+    pred <- read.csv(paste0('./annotation/tmp/', file))
     pred <- pred[c(1:round(nrow(pred)/3)),]
     
     # GO enrichment
@@ -111,3 +112,4 @@ foreach(i=1:length(pred.files), .packages = c("clusterProfiler", "org.Hs.eg.db",
 }
 
 stopCluster(cl)
+print('done!')
