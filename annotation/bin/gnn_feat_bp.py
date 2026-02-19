@@ -1,6 +1,7 @@
 import os
 os.environ['CUDA_LAUNCH_BLOCKING'] = '1'
 import pandas as pd
+import numpy as np
 from tqdm import tqdm
 import torch
 from torch import Tensor
@@ -243,15 +244,15 @@ with open(f"./annotation/src/train_test_data_fold1.pt", "rb") as f:
 
 ''' GNN embedding '''
 # embedding for lncRNA of the interaction network
-def export_emb_in(ensembl_id, device):
+prolist_default = set(lnc2uniprot_pos_idx['uniprot'])
+
+def export_emb_in(ensembl_id, device, prolist = prolist_default):
     ncid = ncID_dict[ensembl_id]
     # custom data
     gnn_mod.load_state_dict(torch.load('./annotation/models/lpi_model_50_0.9342.pt', map_location=device))
-
     gnn_mod.to(device)
     gnn_mod.eval()
-    prolist = set(lnc2uniprot_pos_idx['uniprot'])
-    # prolist = set(lnc2uniprot_pos_all_idx['uniprot'])
+    
     with torch.no_grad():
         edge_label_index = torch.tensor([[ncid] * len(prolist), 
                                         [uniprotid for uniprotid in prolist]], dtype=torch.long)
@@ -264,14 +265,14 @@ def export_emb_in(ensembl_id, device):
             pickle.dump((custom_emb, edge_label_index), f)
     
 # embedding for lncRNA out of the interaction network
-def export_emb_ex(ensembl_id, device, lnc_emb_df):
+def export_emb_ex(ensembl_id, device, lnc_emb_df, prolist = prolist_default):
     ncid = 12650
     # custom data
     gnn_mod.load_state_dict(torch.load('./annotation/models/lpi_model_50_0.9342.pt', map_location=device))
+
     gnn_mod.to(device)
     gnn_mod.eval()
-    prolist = set(lnc2uniprot_pos_idx['uniprot'])
-
+    
     with torch.no_grad():
         edge_label_index = torch.tensor([[ncid] * len(prolist), 
                                         [uniprotid for uniprotid in prolist]], dtype=torch.long)
@@ -298,5 +299,64 @@ def export_emb(filename, dev):
         else:
             export_emb_ex(id, device, lnc_emb_df)
 
+def pred_lpi_in(ensembl_id, device, prolist):
+    softmax = torch.nn.Softmax(dim=1)
+    ncid = ncID_dict[ensembl_id]
+    gnn_mod.load_state_dict(torch.load('./annotation/models/lpi_model_50_0.9342.pt', map_location=device))
+    gnn_mod.to(device)
+    gnn_mod.eval()
+    lpi_res = pd.DataFrame(columns=['protein', 'interaction_type', 'probability'])
+    with torch.no_grad():
+        edge_label_index = torch.tensor([[ncid] * len(prolist), 
+                                        [uniprotid for uniprotid in prolist]], dtype=torch.long)
+        
+        datum = train_data.clone()
+        datum["lncrna", "lpi", "protein"].edge_label_index = edge_label_index 
+        datum = datum.to(device)
+        logit = gnn_mod.forward(datum)
+        prob = softmax(logit)
+        pred = np.argmax(prob.cpu().numpy(), axis=1)
+        lpi_res = pd.DataFrame({'protein': [tarName[idx] for idx in prolist],
+                                'interaction_type': pred,
+                                'probability': np.max(prob.cpu().numpy(), axis=1)})
+        return lpi_res
 
+def pred_lpi_ex(ensembl_id, device, lnc_emb_df, prolist):
+    softmax = torch.nn.Softmax(dim=1)
+    ncid = 12650
+    gnn_mod.load_state_dict(torch.load('./annotation/models/lpi_model_50_0.9342.pt', map_location=device))
+    gnn_mod.to(device)
+    gnn_mod.eval()
+    
+    with torch.no_grad():
+        edge_label_index = torch.tensor([[ncid] * len(prolist), 
+                                        [uniprotid for uniprotid in prolist]], dtype=torch.long)
+        
+        datum = train_data.clone()
+        datum["lncrna", "lpi", "protein"].edge_label_index = edge_label_index 
+        datum['lncrna']['node_id'] = torch.cat((datum['lncrna']['node_id'], torch.tensor([12650])))
+        lnc_fea = torch.tensor(lnc_emb_df.loc[lnc_emb_df['ncID'] == ensembl_id].iloc[:,1:].values)
+        
+        lnc_fea = (lnc_fea - lncrna_fea_mean) / lncrna_fea_sd
+        datum['lncrna'].x = torch.vstack((datum['lncrna'].x, lnc_fea))
+        datum = datum.to(device)
+        logit = gnn_mod.forward(datum)
+        prob = softmax(logit)
+        pred = np.argmax(prob.cpu().numpy(), axis=1)
+        lpi_res = pd.DataFrame({'protein': [tarName[idx] for idx in prolist],
+                                'interaction_type': pred,
+                                'probability': np.max(prob.cpu().numpy(), axis=1)})
+        return lpi_res
 
+def pred_lpi(filename, dev, lpi_out = './annotation/output/'):
+    prolist = list(tarName_dict.values())
+    lnc_emb_df = BERT_embedding(filename=filename, device=dev)
+    lnc_emb_df.reset_index(drop=True, inplace=True)
+    device = torch.device(dev)
+    for id in lnc_emb_df['ncID']:
+        if id in ncID:
+            lpi_res = pred_lpi_in(id, device, prolist)
+        else:
+            lpi_res = pred_lpi_ex(id, device, lnc_emb_df, prolist)
+        lpi_res.to_csv(os.path.join(lpi_out, f'{id}_lpi_prediction.csv'), index=False)
+    print('LPI prediction completed!')
