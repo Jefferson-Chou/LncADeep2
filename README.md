@@ -1,5 +1,5 @@
 # Introduction
-LncADeep 2.0, an advanced tool that identifies lncRNA transcripts based on deep learning and leverages transfer learning to functionally annotate lncRNAs. 
+LncADeep 2.0 is an advanced tool that identifies lncRNA transcripts using deep learning, predicts lncRNA-binding proteins via graph neural networks, and leverages transfer learning to functionally annotate lncRNAs. 
 
 # Build LncADeep 2.0
 ```
@@ -32,27 +32,27 @@ pip install https://data.pyg.org/whl/torch-1.13.0%2Bcu117/pyg_lib-0.3.1%2Bpt113c
 # In Linux terminal:
 cd ~/LncADeep2/
 pip install -r ./requirements.txt
-conda install -c conda-forge r-base==4.3.3
+conda install -c conda::forge r-base==4.3.3
 ```
 R packages used are listed in `R packages versions.csv`
 ### Note
-Files mentioned below can be obtained in [Zenodo](https://doi.org/10.5281/zenodo.17667433).
+Files mentioned below can be obtained in [Zenodo](https://zenodo.org/records/14882729?preview=1&token=eyJhbGciOiJIUzUxMiJ9.eyJpZCI6ImJjNWM5NDZhLTZjZTYtNGZjZi1hNzBmLWNmNWVlOGQxYzMyYiIsImRhdGEiOnt9LCJyYW5kb20iOiIzYjZkZjk3MzE0OTI2ZmFlYTA5ZmI4MDdhY2JiYTlhYSJ9.oekKwDbkjTxlzI1SRs5g0bPbNRNZiAheGliFvrWuZEV0n6sgX6fhzRhTgebJeGlf8LPl1WUdfRaxKJ_AVnzGtw).
 * The case study section is based on the R packages listed in `Rpkg.tar.gz`. Users can install these packages simply by:
 ```
 tar xvf Rpkg.tar.gz
 cp -r ./Rpkg/* ~/.conda/envs/lncadeep/lib/R/library/
 ```
-* The lncRNA function annotation module calls for the DNA-BERT pre-trained model, which can be obtained in [huggingface](https://huggingface.co/zhihan1996/DNABERT-2-117M). Users can also choose to download the file named  `DNABERT-2-117M.tar.gz` in [Zenodo](https://doi.org/10.5281/zenodo.17667433). After downloaded, please:
+* The lncRNA function annotation module calls for the DNA-BERT pre-trained model, which can be obtained in [huggingface](https://huggingface.co/zhihan1996/DNABERT-2-117M). Users can also choose to download the file named  `DNABERT-2-117M.tar.gz` in [Zenodo](https://zenodo.org/records/14882729?preview=1&token=eyJhbGciOiJIUzUxMiJ9.eyJpZCI6ImJjNWM5NDZhLTZjZTYtNGZjZi1hNzBmLWNmNWVlOGQxYzMyYiIsImRhdGEiOnt9LCJyYW5kb20iOiIzYjZkZjk3MzE0OTI2ZmFlYTA5ZmI4MDdhY2JiYTlhYSJ9.oekKwDbkjTxlzI1SRs5g0bPbNRNZiAheGliFvrWuZEV0n6sgX6fhzRhTgebJeGlf8LPl1WUdfRaxKJ_AVnzGtw). After downloaded, please:
 ```
 cd ~/LncADeep2/annotation/models/
 tar xvf DNABERT-2-117M.tar.gz
 ```
-* The lncRNA identification module calls for Pfam dataset and hmmsearch, which are named `identification_src.tar.gz` in [Zenodo](https://doi.org/10.5281/zenodo.17667433). After downloaded, please:
+* The lncRNA identification module calls for Pfam dataset and hmmsearch, which are named `identification_src.tar.gz` in [Zenodo](https://zenodo.org/records/14882729?preview=1&token=eyJhbGciOiJIUzUxMiJ9.eyJpZCI6ImJjNWM5NDZhLTZjZTYtNGZjZi1hNzBmLWNmNWVlOGQxYzMyYiIsImRhdGEiOnt9LCJyYW5kb20iOiIzYjZkZjk3MzE0OTI2ZmFlYTA5ZmI4MDdhY2JiYTlhYSJ9.oekKwDbkjTxlzI1SRs5g0bPbNRNZiAheGliFvrWuZEV0n6sgX6fhzRhTgebJeGlf8LPl1WUdfRaxKJ_AVnzGtw). After downloaded, please:
 ```
 cd ~/LncADeep2/identification
 tar xvf identification_src.tar.gz
 ```
-* The lncRNA annotation module dependencies `annotation_src.tar.gz` can be downloaded in [Zenodo](https://doi.org/10.5281/zenodo.17667433). After downloaded, please:
+* The lncRNA annotation module dependencies `annotation_src.tar.gz` can be downloaded in [Zenodo](https://zenodo.org/records/14882729?preview=1&token=eyJhbGciOiJIUzUxMiJ9.eyJpZCI6ImJjNWM5NDZhLTZjZTYtNGZjZi1hNzBmLWNmNWVlOGQxYzMyYiIsImRhdGEiOnt9LCJyYW5kb20iOiIzYjZkZjk3MzE0OTI2ZmFlYTA5ZmI4MDdhY2JiYTlhYSJ9.oekKwDbkjTxlzI1SRs5g0bPbNRNZiAheGliFvrWuZEV0n6sgX6fhzRhTgebJeGlf8LPl1WUdfRaxKJ_AVnzGtw). After downloaded, please:
 ```
 cd ~/LncADeep2/annotation
 tar xvf annotation_src.tar.gz
@@ -63,7 +63,7 @@ cd ~/LncADeep2
 python LncADeep2.py -h
 ```
 ## Options
-* (__required__): `--mode` specifies the mode of LncADeep2, `identify` mode to distinguish lncRNA transcripts from mRNA ones, `anno` mode to perform functional annotations for input lncRNAs sequences, `train` mode to train a new identification model. 
+* (__required__): `--mode` specifies the mode of LncADeep2, `identify` mode to distinguish lncRNA transcripts from mRNA ones, `train` mode to train a new identification model. `anno` mode is to perform functional annotations for input lncRNAs sequences. `lpi` mode is for predicting lncRNA-binding proteins.
   
 * (__required__): `--input` is the path to the input fasta file.
   
@@ -82,7 +82,7 @@ python LncADeep2.py -h
 ## Input requirements and recommendations
 * In the `identify` mode, the input should be a FASTA file.
 * In the `train` mode, the inputs should include a FASTA file with corresponding label file.
-* In the `anno` mode, the inputs should be a FASTA file whose headers started with '>' are highly recommended to be assigned as ensembl IDs (e.g. ENSG00000223573)
+* In the `anno`/`lpi` mode, the inputs should be a FASTA file whose headers started with '>' are highly recommended to be assigned as ensembl IDs (e.g. ENSG00000223573).
 
 ## Examples
 ```
@@ -95,6 +95,9 @@ python LncADeep2.py -m train -i ./identification/test_data/lncRNA_mRNA_test.fa -
 
 # 'anno' mode
 python LncADeep2.py -m anno -i ./annotation/test_data/test2.fa -d 'cuda:1' -th 10 -o ./annotation/output/
+
+# 'lpi' mode
+python LncADeep2.py -m lpi -i ./annotation/test_data/test2.fa -d 'cuda:1' -o ./annotation/output/
 ```
 # Contact
 If you have any questions, please ask us: pkuzhou@stu.pku.edu.cn or hqzhu@pku.edu.cn
