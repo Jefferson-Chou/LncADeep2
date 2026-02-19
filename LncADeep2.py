@@ -2,7 +2,7 @@ import argparse
 
 def main():
     parser = argparse.ArgumentParser(usage='%(prog)s [options]', description='An ab initio lncRNA identification and functional annotation tool based on deep learning')
-    parser.add_argument('-m', '--mode', type=str, required=True, choices=['identify', 'anno', 'train'], help='Mode of LncADeep2, choose identify, anno or train a identification model')
+    parser.add_argument('-m', '--mode', type=str, required=True, choices=['identify', 'anno', 'train', 'lpi'], help='Mode of LncADeep2, choose identify, anno or train a identification model')
 
     parser.add_argument('-i', '--input', type=str, required=True, help='The path to the input fasta file')
     parser.add_argument('-o', '--output', type=str, help='The path to the output file')
@@ -26,12 +26,19 @@ def main():
             Train(filename=args.input, label_file = args.training_labels, device = args.device, hmmsearch_thread = args.thread)
         except Exception as e:
             print(e)
-    else:
+    elif args.mode == 'anno':
         try:
             from annotation.bin.prediction_bp import pred_go
             pred_go(filename=args.input, dev=args.device, r_thread = args.thread, anno_out = args.output)
         except Exception as e:
             print(e)
+    elif args.mode == 'lpi':
+        try:
+            from annotation.bin.gnn_feat_bp import pred_lpi
+            pred_lpi(filename=args.input, dev=args.device, lpi_out=args.output)
+        except Exception as e:
+            print(e)
+
 
 if __name__ == '__main__':
     main()
