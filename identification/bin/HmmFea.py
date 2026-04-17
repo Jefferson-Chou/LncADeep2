@@ -110,7 +110,7 @@ def RunHMM(fasta, output, pfam, thread=8):
     '''run HMMER and generate output'''
     out1 = output + ".out1" 
     out2 = output + ".out2" 
-    cmd = "hmmsearch -o " + out1 + " --domtblout " + out2 + " --noali -E 0.1 --domE 0.1 --cpu " + str(thread) + " " + pfam + " " + fasta
+    cmd = "./identification/src/hmmsearch -o " + out1 + " --domtblout " + out2 + " --noali -E 0.1 --domE 0.1 --cpu " + str(thread) + " " + pfam + " " + fasta
 
     #print cmd
 

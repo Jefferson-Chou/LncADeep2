@@ -112,7 +112,7 @@ def identify(filename, device = 'cpu', out_dir = './identification/output/result
         print(f'features are saved in {emb_dir}')
 
     # model prediction
-    model.load_state_dict(torch.load(model_file))
+    model.load_state_dict(torch.load(model_file, map_location=device))
     model.to(device)
     model.eval()
     print('predicting...')
