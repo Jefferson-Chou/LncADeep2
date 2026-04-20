@@ -1,5 +1,5 @@
 # Introduction
-LncADeep 2.0 is an advanced tool that identifies lncRNA transcripts using deep learning, predicts lncRNA-binding proteins via graph neural networks, and leverages transfer learning to functionally annotate lncRNAs. 
+LncADeep 2.0, an advanced tool that identifies lncRNA transcripts based on deep learning and leverages transfer learning to functionally annotate lncRNAs. 
 
 # Build LncADeep 2.0
 ```
@@ -63,7 +63,7 @@ cd ~/LncADeep2
 python LncADeep2.py -h
 ```
 ## Options
-* (__required__): `--mode` specifies the mode of LncADeep2, `identify` mode to distinguish lncRNA transcripts from mRNA ones, `train` mode to train a new identification model. `anno` mode is to perform functional annotations for input lncRNAs sequences. `lpi` mode is for predicting lncRNA-binding proteins.
+* (__required__): `--mode` specifies the mode of LncADeep2, `identify` mode to distinguish lncRNA transcripts from mRNA ones, `anno` mode to perform functional annotations for input lncRNAs sequences, `train` mode to train a new identification model. 
   
 * (__required__): `--input` is the path to the input fasta file.
   
@@ -82,7 +82,7 @@ python LncADeep2.py -h
 ## Input requirements and recommendations
 * In the `identify` mode, the input should be a FASTA file.
 * In the `train` mode, the inputs should include a FASTA file with corresponding label file.
-* In the `anno`/`lpi` mode, the inputs should be a FASTA file whose headers started with '>' are highly recommended to be assigned as ensembl IDs (e.g. ENSG00000223573).
+* In the `anno` mode, the inputs should be a FASTA file whose headers started with '>' are highly recommended to be assigned as ensembl IDs (e.g. ENSG00000223573)
 
 ## Examples
 ```
@@ -95,9 +95,11 @@ python LncADeep2.py -m train -i ./identification/test_data/lncRNA_mRNA_test.fa -
 
 # 'anno' mode
 python LncADeep2.py -m anno -i ./annotation/test_data/test2.fa -d 'cuda:1' -th 10 -o ./annotation/output/
-
-# 'lpi' mode
-python LncADeep2.py -m lpi -i ./annotation/test_data/test2.fa -d 'cuda:1' -o ./annotation/output/
 ```
+# Citation
+
+Yiyan Zhou, Jiaheng Hou, Haoling Xie, Nuoshi Lin, Cheng Yang, Hengchuang Yin, Wanqiu Ding, Huaiqiu Zhu, A novel deep learning-driven framework for improving lncRNA comprehensive annotation with LncADeep 2.0, *Bioinformatics*, Volume 42, Issue 4, April 2026, btag162, https://doi.org/10.1093/bioinformatics/btag162
+
 # Contact
+
 If you have any questions, please ask us: pkuzhou@stu.pku.edu.cn or hqzhu@pku.edu.cn
